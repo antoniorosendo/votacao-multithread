@@ -1,10 +1,14 @@
-package common;
+package server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+
+import common.NetCommand;
+import common.NetControl;
+import common.Payload;
 
 public class ClientHandlerThread extends Thread {
 

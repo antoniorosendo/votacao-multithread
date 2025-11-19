@@ -1,5 +1,4 @@
 package common;
-
 public class Vote extends NetProtocol {
 
     private static final long serialVersionUID = 1L;

@@ -1,4 +1,6 @@
-package common;
+package server;
+
+import common.NetProtocol;
 
 public class Server {
 

@@ -1,7 +1,5 @@
 package common;
 
-// A simple Data Transfer Object with user information
-// extends NetProtocol in order to be recognized by client and server
 public class Payload extends NetProtocol
    {
    private static final long serialVersionUID = 1L;

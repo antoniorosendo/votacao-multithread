@@ -1,5 +1,4 @@
-package common;
-
+package client;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +8,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import common.NetCommand;
+import common.NetControl;
+import common.NetProtocol;
+import common.Payload;
 
 // Client connects to the server and receive a sequence of payloads
 // Shutdown according to a command received through the networK (no user interface)
