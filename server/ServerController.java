@@ -14,9 +14,7 @@ public class ServerController {
     private ServerSocket serverSocket;
     private volatile boolean running = false;
 
-  
     private ServerController() {}
-
     
     public static synchronized ServerController getInstance() {
         if (instance == null) {
@@ -25,18 +23,10 @@ public class ServerController {
         return instance;
     }
 
-    /**
-     * Sets the GUI reference for logging and vote registration.
-     * @param gui The ServerGUI instance
-     */
     public void setGUI(ServerGUI gui) {
         this.gui = gui;
     }
 
-    /**
-     * Sets the election data that will be sent to clients.
-     * @param electionData The election data loaded from file
-     */
     public void setElectionData(ElectionData electionData) {
         this.electionData = electionData;
         if (gui != null) {
@@ -44,18 +34,10 @@ public class ServerController {
         }
     }
 
-    /**
-     * Returns the current election data.
-     * @return ElectionData or null if not loaded
-     */
     public ElectionData getElectionData() {
         return electionData;
     }
 
-    /**
-     * Checks if the server is currently running.
-     * @return true if server is accepting connections
-     */
     public boolean isRunning() {
         return running;
     }
@@ -140,10 +122,6 @@ public class ServerController {
         }
     }
 
-    /**
-     * Logs a message through the GUI or console.
-     * @param message The message to log
-     */
     public void log(String message) {
         if (gui != null) {
             gui.addLog(message);
@@ -152,10 +130,6 @@ public class ServerController {
         }
     }
 
-    /**
-     * Returns the GUI instance.
-     * @return ServerGUI or null if running in console mode
-     */
     public ServerGUI getGUI() {
         return gui;
     }

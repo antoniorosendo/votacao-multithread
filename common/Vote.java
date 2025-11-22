@@ -6,11 +6,6 @@ public class Vote extends NetProtocol {
     private final String cpf;
     private final String chosenOption;
 
-    /**
-     * Constructs a new Vote.
-     * @param cpf The voter's validated CPF.
-     * @param chosenOption The option string the user selected.
-     */
     public Vote(String cpf, String chosenOption) {
         this.cpf = cpf;
         this.chosenOption = chosenOption;

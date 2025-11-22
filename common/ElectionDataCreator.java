@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class ElectionDataCreator {
 
     public static void main(String[] args) {
@@ -42,7 +41,6 @@ public class ElectionDataCreator {
             return;
         }
         
-       
         System.out.println();
         System.out.println("Enter the " + numOptions + " voting options:");
         String[] options = new String[numOptions];
@@ -95,12 +93,6 @@ public class ElectionDataCreator {
         scanner.close();
     }
     
-    /**
-     * Saves election data to a serialized file.
-     * @param electionData The election data to save
-     * @param filename The output filename
-     * @throws IOException if file cannot be written
-     */
     private static void saveElectionData(ElectionData electionData, String filename) 
             throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(

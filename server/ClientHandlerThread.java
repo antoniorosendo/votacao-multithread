@@ -17,11 +17,6 @@ public class ClientHandlerThread extends Thread {
     private ObjectInputStream input;
     private String clientAddress;
 
-    /**
-     * Constructs a new client handler thread.
-     * @param clientSocket The connected client socket
-     * @param controller Reference to the server controller
-     */
     public ClientHandlerThread(Socket clientSocket, ServerController controller) {
         this.clientSocket = clientSocket;
         this.controller = controller;
@@ -37,7 +32,7 @@ public class ClientHandlerThread extends Thread {
             input = new ObjectInputStream(clientSocket.getInputStream());
 
             controller.log("← Streams established with client: " + clientAddress);
-            
+
             sendElectionData();
             receiveAndProcessVote();
 
@@ -50,17 +45,12 @@ public class ClientHandlerThread extends Thread {
         }
     }
 
-    /**
-     * Sends the election data to the connected client.
-     * @throws IOException if communication fails
-     */
     private void sendElectionData() throws IOException {
         ElectionData electionData = controller.getElectionData();
 
         if (electionData == null) {
             controller.log("✗ No election data available for " + clientAddress);
             
-            // CORREÇÃO AQUI: Usar NetControl em vez de NetCommand
             NetControl errorCmd = new NetControl(NetCommand.CMD_ERROR, 
                 "No election currently loaded on server");
             output.writeObject(errorCmd);
@@ -73,11 +63,6 @@ public class ClientHandlerThread extends Thread {
         controller.log("Election data sent to " + clientAddress);
     }
 
-    /**
-     * Receives a vote from the client and processes it.
-     * @throws IOException if communication fails
-     * @throws ClassNotFoundException if received object is invalid
-     */
     private void receiveAndProcessVote() throws IOException, ClassNotFoundException {
         Object receivedObject = input.readObject();
 
@@ -117,7 +102,6 @@ public class ClientHandlerThread extends Thread {
             output.flush();
         }
     }
-
     
     private void closeConnection() {
         try {
@@ -139,11 +123,6 @@ public class ClientHandlerThread extends Thread {
         }
     }
 
-    /**
-     * Masks a CPF for privacy in logs.
-     * @param cpf The full CPF
-     * @return Partially masked CPF
-     */
     private String maskCPF(String cpf) {
         if (cpf == null || cpf.length() < 6) {
             return "***";

@@ -4,11 +4,6 @@ import java.util.InputMismatchException;
 
 public class CPFValidator {
 
-    /**
-     * Validates a CPF string.
-     * @param cpf The CPF string to validate (can contain dots and hyphens).
-     * @return true if the CPF is valid, false otherwise.
-     */
     public static boolean isCPF(String cpf) {
         cpf = cpf.replace(".", "").replace("-", "");
 

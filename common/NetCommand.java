@@ -1,6 +1,5 @@
 package common;
 
-// Adicionado 'public'
 public enum NetCommand {
     Acknowledge("Acknowledge Command"),
     Shutdown("Shutdown Command"),

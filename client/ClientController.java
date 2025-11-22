@@ -12,7 +12,6 @@ import common.NetControl;
 import common.NetProtocol;
 import common.Vote;
 
-// Controlador da Pessoa 3: Gerencia a lógica de votação do Cliente
 public class ClientController {
 
     private Socket socket;
@@ -20,23 +19,15 @@ public class ClientController {
     private ObjectInputStream in;
     private ElectionData currentElection;
 
-    // Método principal que organiza o fluxo
     public void start() {
         try {
             connect();
 
-            // 1. Recebe a Eleição do Servidor
             receiveElectionData();
 
-            // 2. Se recebeu a eleição corretamente, inicia a votação
             if (currentElection != null) {
-                // Simula a interface (A Pessoa 5 vai trocar isso pela tela gráfica depois)
                 Vote vote = simulateUserInterface();
-                
-                // 3. Envia o voto para o servidor
                 sendVote(vote);
-                
-                // 4. Espera a confirmação
                 receiveConfirmation();
             }
 
@@ -47,18 +38,14 @@ public class ClientController {
         }
     }
 
-    // Conecta ao servidor
     private void connect() throws IOException {
         System.out.println("Conectando ao servidor...");
         socket = new Socket(NetProtocol.serverAddress, NetProtocol.port);
-        
-        // A ordem é importante: Output primeiro para evitar travamento
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         System.out.println("Conectado!");
     }
 
-    // Recebe o objeto com a Pergunta e Opções
     private void receiveElectionData() throws IOException, ClassNotFoundException {
         System.out.println("Aguardando dados da eleição...");
         Object obj = in.readObject();
@@ -71,14 +58,12 @@ public class ClientController {
         }
     }
 
-    // Envia o objeto Vote para o servidor
     private void sendVote(Vote vote) throws IOException {
         System.out.println("Enviando voto para o CPF: " + vote.getCpf());
         out.writeObject(vote);
         out.flush();
     }
 
-    // Recebe a confirmação do servidor
     private void receiveConfirmation() throws IOException, ClassNotFoundException {
         Object obj = in.readObject();
         if (obj instanceof NetControl) {
@@ -92,8 +77,7 @@ public class ClientController {
         }
     }
 
-    // INTERFACE TEMPORÁRIA (Console)
-    // Isso permite você testar AGORA, antes da Pessoa 5 fazer a janela bonita
+    //INTERFACE TEMPORÁRIA (Console)
     private Vote simulateUserInterface() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n--- TELA DE VOTAÇÃO ---");
