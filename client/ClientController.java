@@ -77,7 +77,8 @@ public class ClientController {
         if (obj instanceof NetControl) {
             NetControl msg = (NetControl) obj;
 
-            if (msg.getNetCommand() == NetCommand.Acknowledge) {
+            if (msg.getNetCommand() == NetCommand.Acknowledge ||
+                    msg.getNetCommand() == NetCommand.CMD_OK) {
                 return true;
             } else {
                 return false;
@@ -107,7 +108,8 @@ public class ClientController {
 
     private void closeConnection() {
         try {
-            if (socket != null) socket.close();
+            if (socket != null)
+                socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
