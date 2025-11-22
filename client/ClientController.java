@@ -22,7 +22,6 @@ public class ClientController {
     public void start() {
         try {
             connect();
-
             receiveElectionData();
 
             if (currentElection != null) {
@@ -46,51 +45,64 @@ public class ClientController {
         System.out.println("Conectado!");
     }
 
-    private void receiveElectionData() throws IOException, ClassNotFoundException {
-        System.out.println("Aguardando dados da eleição...");
+    public void connect(String ip, int port) throws IOException {
+        socket = new Socket(ip, port);
+        out = new ObjectOutputStream(socket.getOutputStream());
+        in = new ObjectInputStream(socket.getInputStream());
+    }
+
+    public ElectionData receiveElectionData() throws IOException, ClassNotFoundException {
         Object obj = in.readObject();
 
         if (obj instanceof ElectionData) {
             this.currentElection = (ElectionData) obj;
-            System.out.println("Eleição Recebida: " + currentElection.getQuestion());
+            return currentElection;
         } else {
-            System.err.println("Objeto inesperado recebido: " + obj.getClass().getName());
+            return null;
         }
     }
 
     private void sendVote(Vote vote) throws IOException {
-        System.out.println("Enviando voto para o CPF: " + vote.getCpf());
         out.writeObject(vote);
         out.flush();
     }
 
-    private void receiveConfirmation() throws IOException, ClassNotFoundException {
+    public void sendVote(String cpf, String option) throws IOException {
+        Vote vote = new Vote(cpf, option);
+        sendVote(vote);
+    }
+
+    public boolean receiveConfirmation() throws IOException, ClassNotFoundException {
         Object obj = in.readObject();
         if (obj instanceof NetControl) {
             NetControl msg = (NetControl) obj;
-            
-            if(msg.getNetCommand() == NetCommand.Acknowledge) {
-                 System.out.println("SUCESSO: Voto computado!");
+
+            if (msg.getNetCommand() == NetCommand.Acknowledge) {
+                return true;
             } else {
-                 System.out.println("ERRO: O servidor rejeitou o voto.");
+                return false;
             }
         }
+        return false;
     }
 
-    //INTERFACE TEMPORÁRIA (Console)
     private Vote simulateUserInterface() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\n--- TELA DE VOTAÇÃO ---");
-        System.out.println("PERGUNTA: " + currentElection.getQuestion());
-        System.out.println("OPÇÕES: " + currentElection.getOptions());
-        
+        System.out.println("\n--- Votação ---");
+        System.out.println("Pergunta: " + currentElection.getQuestion());
+        System.out.println("Opções: " + currentElection.getOptions());
+
         System.out.print("Digite seu CPF: ");
         String cpf = scanner.nextLine();
-        
-        System.out.print("Digite o NOME da opção escolhida: ");
+
+        System.out.print("Digite o nome da opção escolhida: ");
         String escolha = scanner.nextLine();
-        
+
         return new Vote(cpf, escolha);
+    }
+
+    public ElectionData getElection() {
+        return currentElection;
     }
 
     private void closeConnection() {

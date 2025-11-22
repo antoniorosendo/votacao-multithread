@@ -1,17 +1,13 @@
 package client;
 
-import common.NetProtocol;
-
 public class Client {
     public static void main(String[] args) {
         try {
-            System.out.println("Client starting...");
-            System.out.println("Looking for server at " + NetProtocol.serverAddress + " @ " + NetProtocol.port);
+            System.out.println("Starting Client GUI...");
 
             ClientController controller = new ClientController();
-            controller.start();
+            new client.gui.ConnectFrame(controller).setVisible(true);
 
-            System.out.println("Client is shutting down.");
         } catch (Exception exceptionValue) {
             System.err.println("Unexpected exception: " + exceptionValue.getMessage());
             exceptionValue.printStackTrace();
