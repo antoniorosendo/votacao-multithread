@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import common.ElectionData;
 import common.NetCommand;
+import common.NetControl;
 import common.Vote;
 
 public class ClientHandlerThread extends Thread {
@@ -36,11 +37,8 @@ public class ClientHandlerThread extends Thread {
             input = new ObjectInputStream(clientSocket.getInputStream());
 
             controller.log("← Streams established with client: " + clientAddress);
-
             
             sendElectionData();
-
-            
             receiveAndProcessVote();
 
         } catch (IOException e) {
@@ -62,18 +60,16 @@ public class ClientHandlerThread extends Thread {
         if (electionData == null) {
             controller.log("✗ No election data available for " + clientAddress);
             
-            
-            NetCommand errorCmd = new NetCommand(NetCommand.CMD_ERROR, 
+            // CORREÇÃO AQUI: Usar NetControl em vez de NetCommand
+            NetControl errorCmd = new NetControl(NetCommand.CMD_ERROR, 
                 "No election currently loaded on server");
             output.writeObject(errorCmd);
             output.flush();
             return;
         }
 
-      
         output.writeObject(electionData);
         output.flush();
-
         controller.log("Election data sent to " + clientAddress);
     }
 
@@ -83,7 +79,6 @@ public class ClientHandlerThread extends Thread {
      * @throws ClassNotFoundException if received object is invalid
      */
     private void receiveAndProcessVote() throws IOException, ClassNotFoundException {
-        
         Object receivedObject = input.readObject();
 
         if (receivedObject instanceof Vote) {
@@ -92,24 +87,21 @@ public class ClientHandlerThread extends Thread {
             controller.log("← Vote received from " + clientAddress + 
                           " (CPF: " + maskCPF(vote.getCpf()) + ")");
 
-           
             boolean success = false;
             ServerGUI gui = controller.getGUI();
             
             if (gui != null) {
                 success = gui.registerVote(vote);
             } else {
-               
                 controller.log("✗ Cannot register vote: GUI not available");
             }
 
-           
-            NetCommand response;
+            NetControl response;
             if (success) {
-                response = new NetCommand(NetCommand.CMD_OK, "Vote registered successfully");
+                response = new NetControl(NetCommand.CMD_OK, "Vote registered successfully");
                 controller.log("✓ Vote accepted from " + clientAddress);
             } else {
-                response = new NetCommand(NetCommand.CMD_ERROR, 
+                response = new NetControl(NetCommand.CMD_ERROR, 
                     "Vote rejected - possible duplicate CPF or invalid option");
                 controller.log("Vote rejected from " + clientAddress);
             }
@@ -118,11 +110,9 @@ public class ClientHandlerThread extends Thread {
             output.flush();
 
         } else {
-            controller.log("Invalid object received from " + clientAddress + 
-                          " (expected Vote)");
+            controller.log("Invalid object received from " + clientAddress);
             
-            NetCommand errorCmd = new NetCommand(NetCommand.CMD_ERROR, 
-                "Invalid data format");
+            NetControl errorCmd = new NetControl(NetCommand.CMD_ERROR, "Invalid data format");
             output.writeObject(errorCmd);
             output.flush();
         }

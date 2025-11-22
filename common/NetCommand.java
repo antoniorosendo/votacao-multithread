@@ -3,7 +3,9 @@ package common;
 // Adicionado 'public'
 public enum NetCommand {
     Acknowledge("Acknowledge Command"),
-    Shutdown("Shutdown Command");
+    Shutdown("Shutdown Command"),
+    CMD_OK("Command OK"),
+    CMD_ERROR("Command Error");
 
     private final String description;
 

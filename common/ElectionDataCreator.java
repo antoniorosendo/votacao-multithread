@@ -1,4 +1,4 @@
-package server;
+package common;
 
 import common.ElectionData;
 import java.io.*;
@@ -12,10 +12,8 @@ public class ElectionDataCreator {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         
-       
         System.out.println("     Election Data Creator");
         System.out.println();
-        
     
         System.out.println("Enter the election question:");
         String question = scanner.nextLine().trim();

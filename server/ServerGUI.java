@@ -33,7 +33,7 @@ public class ServerGUI extends JFrame {
     private ElectionData currentElection;
     private ConcurrentHashMap<String, Integer> voteCount;
     private Set<String> registeredCPFs;
-    private Timer updateTimer;
+    private javax.swing.Timer updateTimer;
     
     
     private static final Color COLOR_PRIMARY = new Color(41, 128, 185);
@@ -229,7 +229,7 @@ public class ServerGUI extends JFrame {
     }
     
     private void startResultsUpdateTimer() {
-        updateTimer = new Timer(1000, e -> updateResultsDisplay());
+        updateTimer = new javax.swing.Timer(1000, e -> updateResultsDisplay());
         updateTimer.start();
     }
     
