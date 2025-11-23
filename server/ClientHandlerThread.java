@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
 import common.ElectionData;
 import common.NetCommand;
 import common.NetControl;
@@ -51,7 +52,7 @@ public class ClientHandlerThread extends Thread {
         if (electionData == null) {
             controller.log("✗ No election data available for " + clientAddress);
             
-            NetControl errorCmd = new NetControl(NetCommand.CMD_ERROR, 
+            NetControl errorCmd = new NetControl(NetCommand.Shutdown, 
                 "No election currently loaded on server");
             output.writeObject(errorCmd);
             output.flush();
@@ -72,7 +73,7 @@ public class ClientHandlerThread extends Thread {
             controller.log("← Vote received from " + clientAddress + 
                           " (CPF: " + maskCPF(vote.getCpf()) + ")");
 
-            boolean success = false;
+            String success = null;
             ServerGUI gui = controller.getGUI();
             
             if (gui != null) {
@@ -82,13 +83,27 @@ public class ClientHandlerThread extends Thread {
             }
 
             NetControl response;
-            if (success) {
-                response = new NetControl(NetCommand.CMD_OK, "Vote registered successfully");
-                controller.log("✓ Vote accepted from " + clientAddress);
-            } else {
-                response = new NetControl(NetCommand.CMD_ERROR, 
-                    "Vote rejected - possible duplicate CPF or invalid option");
-                controller.log("Vote rejected from " + clientAddress);
+
+            switch (success) {
+                case "OK":
+                    response = new NetControl(NetCommand.Acknowledge, "Vote registered successfully");
+                    controller.log("✓ Vote accepted from " + clientAddress);
+                    break;
+
+                case "DUPLICATE_CPF":
+                    response = new NetControl(NetCommand.Shutdown, "This CPF has already voted.");
+                    controller.log("✗ Duplicate CPF from " + clientAddress);
+                    break;
+
+                case "INVALID_OPTION":
+                    response = new NetControl(NetCommand.Shutdown, "Invalid voting option.");
+                    controller.log("✗ Invalid option from " + clientAddress);
+                    break;
+
+                default:
+                    response = new NetControl(NetCommand.Shutdown, "Unknown server error.");
+                    controller.log("✗ General error from " + clientAddress);
+                    break;
             }
 
             output.writeObject(response);
@@ -97,7 +112,7 @@ public class ClientHandlerThread extends Thread {
         } else {
             controller.log("Invalid object received from " + clientAddress);
             
-            NetControl errorCmd = new NetControl(NetCommand.CMD_ERROR, "Invalid data format");
+            NetControl errorCmd = new NetControl(NetCommand.Shutdown, "Invalid data format");
             output.writeObject(errorCmd);
             output.flush();
         }

@@ -526,22 +526,22 @@ public class ServerGUI extends JFrame {
         });
     }
     
-    public synchronized boolean registerVote(Vote vote) {
+    public synchronized String registerVote(Vote vote) {
         if (currentElection == null) {
             addLog(" Vote rejected: No election loaded");
-            return false;
+            return "ERROR";
         }
         
         // Check for duplicate CPF
         if (registeredCPFs.contains(vote.getCpf())) {
             addLog(" Vote rejected: CPF " + maskCPF(vote.getCpf()) + " already voted");
-            return false;
+            return "DUPLICATE_CPF";
         }
         
         // Validate option exists
         if (!currentElection.getOptions().contains(vote.getChosenOption())) {
             addLog(" Vote rejected: Invalid option");
-            return false;
+            return "INVALID_OPTION";
         }
         
         // Register vote
@@ -550,7 +550,7 @@ public class ServerGUI extends JFrame {
         addLog(" Vote registered: " + vote.getChosenOption() + 
                " (CPF: " + maskCPF(vote.getCpf()) + ")");
         
-        return true;
+        return "OK";
     }
     
     public ElectionData getElectionData() {
@@ -631,7 +631,7 @@ public class ServerGUI extends JFrame {
                 <br>
                 
                 <p><b>SI400  Object-Oriented Programming II</b><br>
-                Java Programming<br>/p>
+                Java Programming<br></p>
                 <br>
                 
                 <h3 style='color: #34495e;'>Project Team:</h3>
