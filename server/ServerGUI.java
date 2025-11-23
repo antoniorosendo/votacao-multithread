@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerGUI extends JFrame {
-    
+
     private JButton btnStartServer;
     private JButton btnLoadElection;
     private JButton btnEndElection;
@@ -636,11 +636,12 @@ public class ServerGUI extends JFrame {
                 
                 <h3 style='color: #34495e;'>Project Team:</h3>
                 <p>
+                 Antonio Carlos Rosendo da Silva  RA: 174258<br>
+                 Gabriel Aleksandro De Paula 198327<br>
                  Gabriel Colombo  RA: 283993<br>
+                 Izabella Julia dos Santos RA: 169048<br>
                  Leonardo Bonfá Schroeder  RA: 289156<br>
                  Raissa Toassa Martinelli  RA: 184404<br>
-                 Antonio Carlos Rosendo  RA: 174258<br>
-                 Isabella Julia dos Santos RA: 169048<br>
                 </p>
                 <br>
             
